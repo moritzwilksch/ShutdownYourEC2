@@ -9,6 +9,21 @@ from prefect.schedules import Schedule
 from prefect.schedules.clocks import IntervalClock
 import requests
 import json
+import random
+
+COMMENTS = [
+    "Did you forget your EC2 instance again? 🙄",
+    "Bruh 🤦🏼‍♂️ your EC2 is still running!",
+    "You stupid? EC2 is still running... 🙀",
+    "Oh my god!!! If I'll have to remind you ONE MORE TIME.... 😤",
+    "Just turn off your EC2 already 🙄",
+    "Not again... 😒"
+    "You're a bad person.",
+    "You're the WORST!",
+    "Guess what... 💸",
+    "Guess what you are! An 🍞🙎🏼‍♂️🍞!"
+]
+
 
 cloudwatch_client = boto3.client(
     "cloudwatch",
@@ -66,7 +81,8 @@ class SlackNotifier(Task):
             "Content-type": "application/json",
         }
 
-        message = f"Did you forget your EC2 instance again? 🙄 `cpu_util` = {util:.2}%"
+        comment = random.choice(COMMENTS)
+        message = f"{comment} `cpu_util` = {util:.2}%"
         data = {"text": message}
 
         response = requests.post(

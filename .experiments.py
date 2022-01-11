@@ -36,3 +36,22 @@ response = cloudwatch_client.get_metric_statistics(
 data_points = [p["Average"] for p in response["Datapoints"]]
 print(response)
 print(data_points)
+
+
+import requests
+import json
+import os
+def send_slack():
+    headers = {
+                "Content-type": "application/json",
+            }
+
+    comment = "Bruh 🤦🏼‍♂️ your EC2 is still running!"
+    message = f"{comment} `cpu_util` = {42.0:.2}%"
+    data = {"text": message}
+
+    response = requests.post(
+        os.getenv("SLACK_WEBHOOK_URL"), headers=headers, data=json.dumps(data)
+    )
+
+    print(response.text)
