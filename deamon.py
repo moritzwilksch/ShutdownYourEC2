@@ -46,10 +46,12 @@ class CloudWatchChecker(Task):
         data_points = [p["Average"] for p in response["Datapoints"]]
 
         if len(data_points) < 6:
+            self.logger.info("Returning cpu_util = 9999")
             return 9999  # machine just started < 30 min ago.
 
         avg_of_data_points = sum(data_points) / len(data_points)
 
+        self.logger.info(f"Returning cpu_util = {avg_of_data_points}")
         return avg_of_data_points
 
     def run(self):
@@ -104,7 +106,7 @@ check_cpu_task = CloudWatchChecker(
 )
 notify_slack_task = SlackNotifier()
 
-schedule = Schedule(clocks=[IntervalClock(interval=timedelta(seconds=5))])
+schedule = Schedule(clocks=[IntervalClock(interval=timedelta(minutes=5))])
 
 #%%
 
